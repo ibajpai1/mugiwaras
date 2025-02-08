@@ -15,7 +15,7 @@ Our team has developed the Organization Accountability Project, focusing on crea
 
 ### 1. Tax Payment Portal
 
-- **Income Entry**: Users can input their income and the amount of taxes they pay.
+- **Income Entry**: Users can input the amount of taxes they pay.
 - **Confidential Transactions**: All transactions from users are processed using differential privacy to protect individual financial information.
 - **Government Pool**: All funds collected are pooled together, ensuring that individual contributions remain confidential.
 
