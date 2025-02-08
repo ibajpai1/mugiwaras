@@ -8,7 +8,7 @@ Our team has developed the Organization Accountability Project, focusing on crea
 
 ## Tech Stack
 -----------
-<a href='https://xrpl.org/' target="_blank"><img alt='XRPL' src='https://img.shields.io/badge/XRPL-100000?style=for-the-badge&logo=XRPL&logoColor=0884FF&labelColor=0884FF&color=0884FF&margin=20'/></a> <a href='https://container-registry.oracle.com/ords/f?p=113:10::::::' target="_blank"><img alt='Oracle' src='https://img.shields.io/badge/Oracle_CI/CR-100000?style=for-the-badge&logo=Oracle&logoColor=FF0505&labelColor=FF0505&color=FF0505&margin=200'/></a><a href='https://www.python.org/' target="_blank"><img alt='' src='https://img.shields.io/badge/Python-100000?style=for-the-badge&logo=&logoColor=9AFF02&labelColor=9AFF02&color=9AFF02&margin=20'/></a>
+<a href='https://xrpl.org/' target="_blank"><img alt='XRPL' src='https://img.shields.io/badge/XRPL-100000?style=for-the-badge&logo=XRPL&logoColor=0884FF&labelColor=0884FF&color=0884FF'/></a> <a href='https://container-registry.oracle.com/ords/f?p=113:10::::::' target="_blank"><img alt='Oracle' src='https://img.shields.io/badge/Oracle_CI/CR-100000?style=for-the-badge&logo=Oracle&logoColor=FF0505&labelColor=FF0505&color=FF0505'/></a><a href='https://www.python.org/' target="_blank"><img alt='' src='https://img.shields.io/badge/Python-100000?style=for-the-badge&logo=&logoColor=9AFF02&labelColor=9AFF02&color=9AFF02'/></a>
 
 ## Features
 ------------
