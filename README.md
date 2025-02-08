@@ -6,6 +6,10 @@
 
 Our team has developed the Organization Accountability Project, focusing on creating a transparent and confidential tax expenditure tracking system. This is achieved by leveraging the publicly accessible and immutable ledger: XRP Ledger. This project consists of two main portals: a **Tax Payment Portal** and a **Gov-Spending Tracker Portal**. Our system ensures the privacy of individual transactions using differential privacy, while making the allocation of funds from the government pool publicly accessible. A graph based view is used to track how money moves from source to the vendors(paid by the government).
 
+## Tech Stack
+-----------
+<a href='https://xrpl.org/' target="_blank"><img alt='XRPL' src='https://img.shields.io/badge/XRPL-100000?style=for-the-badge&logo=XRPL&logoColor=0884FF&labelColor=0884FF&color=0884FF'/></a>
+
 ## Features
 ------------
 
