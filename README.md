@@ -104,9 +104,3 @@ http://127.0.0.1:6969
 
 ## Team Contribution
 Our team has worked collaboratively to design and implement this system, ensuring that it meets the highest standards of privacy, security, and transparency. We are committed to ongoing development and improvement to ensure the system remains effective and user-friendly.
-
-
-## Acknowledgments
-
-Special thanks to our team members for their dedication and expertise in developing this project.
-```
