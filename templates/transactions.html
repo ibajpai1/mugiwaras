@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet Transactions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-8">
+    <div class="max-w-4xl mx-auto">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold">Wallet Transactions</h1>
+            <a href="/admin" class="text-purple-600 hover:text-purple-800">Back to Admin</a>
+        </div>
+
+        <!-- Wallet Selection -->
+        <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+            <h2 class="text-xl font-semibold mb-4">Select Wallet</h2>
+            <div class="flex gap-4">
+                <select id="walletSelect" class="flex-1 rounded-md border-gray-300 shadow-sm">
+                    <option value="">All Wallets</option>
+                </select>
+                <button onclick="loadTransactions()" class="bg-purple-500 text-white px-4 py-2 rounded-md hover:bg-purple-600">
+                    View Transactions
+                </button>
+            </div>
+        </div>
+
+        <!-- Wallet Info -->
+        <div id="walletInfo" class="bg-white p-6 rounded-lg shadow-md mb-8 hidden">
+            <h2 class="text-xl font-semibold mb-4">Wallet Details</h2>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <p class="text-sm text-gray-600">Address:</p>
+                    <p id="walletAddress" class="font-mono text-sm break-all"></p>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-600">Balance:</p>
+                    <p id="walletBalance" class="font-medium"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transaction History -->
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-xl font-semibold mb-4">Transaction History</h2>
+            <div id="transactionHistory" class="space-y-4">
+                <!-- Transactions will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const departments = [
+            { id: 'tax_pool', name: 'Tax Pool' },
+            { id: 'exit_pool', name: 'Exit Pool' },
+            { id: 'government', name: 'Government Wallet' },
+            { id: 'dept_transport', name: 'Department of Transport' },
+            { id: 'dept_labor', name: 'Department of Labor' },
+            { id: 'dept_education', name: 'Department of Education' },
+            { id: 'penn_dept_transport', name: 'Pennsylvania State Department of Transport' },
+            { id: 'penn_dept_labor', name: 'Pennsylvania State Department of Labor' },
+            { id: 'penn_dept_education', name: 'Pennsylvania State Department of Education'},
+            { id: 'pitt_dept_transport', name: 'Pittsburgh City Department of Transport' },
+            { id: 'pitt_dept_labor', name: 'Pittsburgh City Department of Labor' },
+            { id: 'pitt_dept_education', name: 'Pittsburgh City Department of Education'},
+            { id: 'squirrel_hill_dept_transport', name: 'Squirrel Hill Department of Transport' },
+        ];
+
+        // Populate wallet select dropdown
+        function populateWalletSelect() {
+            const select = document.getElementById('walletSelect');
+            departments.forEach(dept => {
+                select.innerHTML += `<option value="${dept.id}">${dept.name}</option>`;
+            });
+        }
+
+        // Initialize dropdown
+        populateWalletSelect();
+
+        async function loadTransactions() {
+            const walletId = document.getElementById('walletSelect').value;
+            const url = walletId ? `/api/transactions/${walletId}` : '/api/transactions';
+            
+            console.log('Fetching transactions from:', url);
+            
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                console.log('Response data:', data);
+                
+                if (data.success) {
+                    // Update wallet info if specific wallet selected
+                    const walletInfo = document.getElementById('walletInfo');
+                    if (walletId) {
+                        document.getElementById('walletAddress').textContent = data.wallet_address || 'N/A';
+                        document.getElementById('walletBalance').textContent = `${data.wallet_balance || 0} XRP`;
+                        walletInfo.classList.remove('hidden');
+                    } else {
+                        walletInfo.classList.add('hidden');
+                    }
+
+                    // Update transaction history
+                    const historyDiv = document.getElementById('transactionHistory');
+                    historyDiv.innerHTML = ''; // Clear existing entries
+                    
+                    if (!data.transactions || data.transactions.length === 0) {
+                        historyDiv.innerHTML = '<p class="text-gray-500">No transactions found</p>';
+                        return;
+                    }
+                    
+                    data.transactions.forEach(tx => {
+                        const txElement = document.createElement('div');
+                        txElement.className = `p-4 rounded-md ${tx.success ? 'bg-gray-50' : 'bg-red-50'} border`;
+                        
+                        txElement.innerHTML = `
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="font-medium">${tx.type}</p>
+                                    <p class="text-sm text-gray-600">From: ${tx.sender}</p>
+                                    <p class="text-sm text-gray-600">To: ${tx.receiver}</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="font-medium">${tx.amount_xrp} XRP</p>
+                                    <p class="text-xs text-gray-500">${new Date(tx.timestamp * 1000).toLocaleString()}</p>
+                                </div>
+                            </div>
+                            <p class="text-xs text-gray-400 mt-2">TX Hash: ${tx.tx_hash}</p>
+                        `;
+                        
+                        historyDiv.appendChild(txElement);
+                    });
+                } else {
+                    console.error('Error in response:', data.error);
+                    const historyDiv = document.getElementById('transactionHistory');
+                    historyDiv.innerHTML = `<p class="text-red-500">Error: ${data.error}</p>`;
+                }
+            } catch (error) {
+                console.error('Error loading transactions:', error);
+                const historyDiv = document.getElementById('transactionHistory');
+                historyDiv.innerHTML = `<p class="text-red-500">Error loading transactions: ${error.message}</p>`;
+            }
+        }
+
+        // Load transactions on page load and every 30 seconds
+        loadTransactions();
+        setInterval(loadTransactions, 30000);
+    </script>
+</body>
+</html> 

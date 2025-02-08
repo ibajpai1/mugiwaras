@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction Tree</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        .node circle {
+            fill: #fff;
+            stroke: #4a5568;
+            stroke-width: 4px;
+        }
+
+        .node text {
+            font: 20px sans-serif;
+            fill: #2d3748;
+            font-weight: bold;
+        }
+
+        .link {
+            fill: none;
+            stroke: #2d3748;
+            stroke-width: 3px;
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .link:hover {
+            stroke: #1a202c;
+            stroke-width: 4px;
+        }
+
+        .arrow {
+            fill: #4a5568;
+            opacity: 0.6;
+        }
+
+        .transaction-amount {
+            font-size: 14px;
+            fill: #2d3748;
+            pointer-events: none;
+        }
+
+        .balance-info {
+            font: 16px sans-serif;
+            fill: #4a5568;
+        }
+
+        .tooltip {
+            position: absolute;
+            padding: 8px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            border-radius: 4px;
+            font-size: 12px;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div id="tree-container" style="width: 100vw; height: 100vh;"></div>
+
+    <script>
+        async function loadTransactionTree() {
+            try {
+                const response = await fetch('/api/transaction-tree');
+                const data = await response.json();
+                if (data.success) {
+                    renderTree(data.data);
+                } else {
+                    console.error('Error loading data:', data.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        function renderTree(data) {
+            // Debug logs
+            console.log("Received data:", data);
+            console.log("Root children:", data.root.children);
+
+            // Clear existing content
+            d3.select("#tree-container").html("");
+
+            const margin = {top: 50, right: 100, bottom: 50, left: 100};  // Reduced margins
+            const width = window.innerWidth - margin.left - margin.right;
+            const height = window.innerHeight - margin.top - margin.bottom;
+
+            console.log("SVG dimensions:", { width, height });
+
+            // Create SVG with background color for visibility
+            const svg = d3.select("#tree-container")
+                .append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .style("background-color", "#f0f0f0")  // Added for debugging
+                .append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
+
+            // Create tooltip
+            const tooltip = d3.select("body").append("div")
+                .attr("class", "tooltip")
+                .style("opacity", 0);
+
+            // Assign levels to nodes
+            data.root.children.forEach(node => {
+                console.log("Processing node:", node);
+                if (node.id === 'tax_pool') {
+                    node.level = 0;
+                } else if (node.id === 'government') {
+                    node.level = 1;
+                } else if (node.id.startsWith('penn_')) {
+                    node.level = 3;
+                } else if (node.id.startsWith('pitt_')) {
+                    node.level = 4;
+                } else if (node.id.startsWith('squirrel_')) {
+                    node.level = 5;
+                } else if (node.id === 'exit_pool') {
+                    node.level = 6;
+                } else if (node.id.startsWith('dept')){
+                    node.level = 2; // Any other nodes
+                }
+                else
+                {
+                    node.level = 7;
+                }
+            });
+
+            // Sort nodes by level
+            data.root.children.sort((a, b) => a.level - b.level);
+
+            // Create hierarchy
+            const root = d3.hierarchy(data.root);
+            console.log("Hierarchy created:", root);
+
+            // Custom positioning with debug logs
+            root.descendants().forEach(d => {
+                if (d.depth === 0) {
+                    // Root node (Transaction System)
+                    d.y = 50;
+                    d.x = height / 2;
+                } else {
+                    const node = d.data;
+                    d.y = 150 + (node.level * 180);  // Keep horizontal spacing
+                    
+                    if (node.id === 'tax_pool') {
+                        d.x = height * 0.2;  // Moved up
+                    } else if (node.id === 'government') {
+                        d.x = height * 0.35;  // More space between tax_pool and gov
+                    } else if (node.id === 'exit_pool') {
+                        d.x = height * 0.8;  // Moved further down
+                    } else if (node.id.startsWith('penn_')) {
+                        const pennDepts = data.root.children.filter(n => n.id.startsWith('penn_'));
+                        const index = pennDepts.findIndex(n => n.id === node.id);
+                        d.x = height * 0.45 + (index * 80);  // Start lower
+                    } else if (node.id.startsWith('pitt_')) {
+                        const pittDepts = data.root.children.filter(n => n.id.startsWith('pitt_'));
+                        const index = pittDepts.findIndex(n => n.id === node.id);
+                        d.x = height * 0.65 + (index * 80);  // More space after Penn depts
+                    } else if (node.id.startsWith('dept_')) {
+                        // Handle regular departments
+                        const regularDepts = data.root.children.filter(n => n.id.startsWith('dept_'));
+                        const index = regularDepts.findIndex(n => n.id === node.id);
+                        d.x = height * 0.25 + (index * 80);  // Position between tax_pool and Penn depts
+                    } else if (node.id.startsWith('squirrel_')) {
+                        const squirrelDepts = data.root.children.filter(n => n.id.startsWith('squirrel_'));
+                        const index = squirrelDepts.findIndex(n => n.id === node.id);
+                        d.x = height * 0.75 + (index * 80);  // Position between Pitt and exit_pool
+                    } else {
+                        d.x = height / 2;  // Fallback position
+                    }
+                }
+                console.log(`Node ${d.data.name} positioned at:`, { x: d.x, y: d.y });
+            });
+
+            // Process links
+            const links = data.links;
+            console.log("Processing links:", links);
+            console.log("Links data:", links);
+
+            // Add paths for transactions
+            const link = svg.selectAll(".link")
+                .data(links)
+                .enter()
+                .append("path")
+                .attr("class", "link")
+                .attr("d", d => {
+                    const sourceNode = root.descendants().find(n => n.data.id === d.source);
+                    const targetNode = root.descendants().find(n => n.data.id === d.target);
+                    console.log("Source node:", sourceNode);
+                    console.log("Target node:", targetNode);
+                    if (sourceNode && targetNode) {
+                        console.log(`Drawing link from ${d.source} to ${d.target}`);
+                        return `M ${sourceNode.y} ${sourceNode.x}
+                                Q ${(sourceNode.y + targetNode.y)/2} ${(sourceNode.x + targetNode.x)/2}
+                                ${targetNode.y} ${targetNode.x}`;
+                    }
+                    console.log("Failed to draw link - missing nodes");
+                    return "";
+                })
+                .style("stroke", "#4a5568")
+                .style("stroke-width", "2px")
+                .style("fill", "none")
+                .style("opacity", 0.8);
+
+            console.log("Created links:", link.nodes().length);
+
+            // Add transaction amounts
+            svg.selectAll(".transaction-amount")
+                .data(links)
+                .enter()
+                .append("text")
+                .attr("class", "transaction-amount")
+                .attr("x", d => {
+                    const sourceNode = root.descendants().find(n => n.data.id === d.source);
+                    const targetNode = root.descendants().find(n => n.data.id === d.target);
+                    return (sourceNode.y + targetNode.y) / 2;
+                })
+                .attr("y", d => {
+                    const sourceNode = root.descendants().find(n => n.data.id === d.source);
+                    const targetNode = root.descendants().find(n => n.data.id === d.target);
+                    return (sourceNode.x + targetNode.x) / 2;
+                })
+                .attr("dy", -5)
+                .style("text-anchor", "middle")
+                .style("font-size", "12px")
+                .style("fill", "#4a5568")
+                .text(d => `${d.value.toFixed(2)} XRP`);
+
+            // Add hover effect
+            link.on("mouseover", (event, d) => {
+                d3.select(event.target)
+                    .style("stroke", "#2d3748")
+                    .style("stroke-width", "3px")
+                    .style("opacity", 1);
+
+                tooltip.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+                tooltip.html(`
+                    <div>
+                        <strong>From: ${d.source}</strong><br/>
+                        <strong>To: ${d.target}</strong><br/>
+                        <strong>Amount: ${d.value.toFixed(2)} XRP</strong><br/>
+                        <strong>Time: ${new Date(d.timestamp * 1000).toLocaleString()}</strong>
+                    </div>
+                `)
+                .style("left", (event.pageX + 10) + "px")
+                .style("top", (event.pageY - 28) + "px");
+            })
+            .on("mouseout", (event) => {
+                d3.select(event.target)
+                    .style("stroke", "#4a5568")
+                    .style("stroke-width", "2px")
+                    .style("opacity", 0.6);
+                    
+                tooltip.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+            });
+
+            // Add nodes with debug logs
+            const nodes = root.descendants();
+            console.log("Nodes to render:", nodes);
+
+            const node = svg.selectAll(".node")
+                .data(nodes)
+                .enter()
+                .append("g")
+                .attr("class", "node")
+                .attr("transform", d => {
+                    console.log(`Transforming node ${d.data.name} to:`, { x: d.x, y: d.y });
+                    return `translate(${d.y},${d.x})`;
+                });
+
+            // Add circles to nodes
+            node.append("circle")
+                .attr("r", 20)  // Reduced from 25 to 20
+                .style("fill", "#fff")
+                .style("stroke", "#4a5568")
+                .style("stroke-width", "2px");  // Reduced from 3px to 2px
+
+            // Add labels to nodes
+            node.append("text")
+                .attr("dy", "-1.2em")  // Moved closer to node
+                .attr("x", 0)
+                .style("text-anchor", "middle")
+                .style("font-size", "12px")  // Reduced from 16px to 12px
+                .style("font-weight", "bold")
+                .text(d => d.data.name);
+
+            // Add balance info
+            node.append("text")
+                .attr("class", "balance-info")
+                .attr("dy", "1.2em")  // Moved closer to node
+                .attr("x", 0)
+                .style("text-anchor", "middle")
+                .style("font-size", "10px")  // Reduced from 14px to 10px
+                .text(d => `${d.data.balance.toFixed(2)} XRP`);
+        }
+
+        // Load the tree when the page loads
+        loadTransactionTree();
+        
+        // Refresh every 30 seconds
+        setInterval(loadTransactionTree, 30000);
+    </script>
+</body>
+</html> 
