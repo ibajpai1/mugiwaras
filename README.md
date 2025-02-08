@@ -1,5 +1,5 @@
-Overview
-Our team has developed the Organization Accountability Project, focusing on creating a transparent and confidential tax expenditure tracking system. This project consists of two main portals: a Tax Payment Portal and a Gov-Spending Tracker Portal. Our system ensures the privacy of individual transactions using differential privacy, while making the allocation of funds from the government pool publicly accessible.
+<h3>Overview</h3>
+<p>Our team has developed the Organization Accountability Project, focusing on creating a transparent and confidential tax expenditure tracking system. This project consists of two main portals: a Tax Payment Portal and a Gov-Spending Tracker Portal. Our system ensures the privacy of individual transactions using differential privacy, while making the allocation of funds from the government pool publicly accessible.</p>
 Features
 1. Tax Payment Portal
 
