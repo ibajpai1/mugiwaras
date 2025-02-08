@@ -63,9 +63,18 @@ Our project is built around an accountability framework that ensures:
 - **Admin Portal**: Accessible for administrative tasks and oversight.
 - **Transaction Portal**: Accessible for users to file their taxes.
 - **Financial transaction Visualizer**: Accessible for users to keep a track of where the tax money is being disbursed.
+  
+## Demo
+-------------------
+![WhatsApp Image 2025-02-08 at 16 56 03_e462920b](https://github.com/user-attachments/assets/9132085c-70c6-4aed-a875-9cd888838404)
+
+![WhatsApp Image 2025-02-08 at 16 56 03_04a0ea07](https://github.com/user-attachments/assets/1d000f57-da90-453a-b9a2-802fb075ae01)
+
+![WhatsApp Image 2025-02-08 at 16 56 04_f7d37407](https://github.com/user-attachments/assets/e457ab64-c34b-4c19-980e-56a3e07945cb)
+
 
 ## Installation and Running Instructions
-
+-------------------
 To run the Organization Accountability Project, follow these steps:
 
 ### Step 1: Install Requirements
