@@ -109,6 +109,10 @@ Open a web browser and navigate to:
 ```
 http://127.0.0.1:6969
 ```
+### You can also view this hosted on 
 
+```
+http://transparenx.co/
+```
 ## Team Contribution
 Our team has worked collaboratively to design and implement this system, ensuring that it meets the highest standards of privacy, security, and transparency. We are committed to ongoing development and improvement to ensure the system remains effective and user-friendly.
