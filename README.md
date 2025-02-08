@@ -82,11 +82,10 @@ To run the Organization Accountability Project, follow these steps:
 Ensure you have a `requirements.txt` file with the following content:
 
 ```
-Flask==3.0.2
-xrpl-py==1.7.0
+Flask==3.1.0
+xrpl-py==4.0.0
 python-dotenv==1.0.1
-Werkzeug==3.0.1
-requests==2.31.0
+Werkzeug==3.1.3
 ```
 
 Run the following command in your terminal:

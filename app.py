@@ -815,4 +815,4 @@ if __name__ == '__main__':
     print(tax_system.get_all_balances())
 
     # Start Flask server
-    app.run(debug=True, port=6969)
+    app.run(debug=False, port=80, host='0.0.0.0')
