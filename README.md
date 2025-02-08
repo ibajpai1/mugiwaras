@@ -108,9 +108,6 @@ http://127.0.0.1:6969
 
 We welcome contributions to enhance the project's functionality and security. Please submit pull requests or issues through our repository.
 
-## License
-
-This project is licensed under [License Name]. See LICENSE for details.
 
 ## Acknowledgments
 
