@@ -47,10 +47,6 @@ Our team has developed the Organization Accountability Project, focusing on crea
 
 We intend for this project to be used by individuals and government entities seeking to improve transparency and accountability in tax expenditure tracking. It offers a unique blend of privacy protection and public oversight, making it suitable for state, local, and federal development projects.
 
-## Team Contributions
--------------------
-
-Our team has worked collaboratively to design and implement this system, ensuring that it meets the highest standards of privacy, security, and transparency. We are committed to ongoing development and improvement to ensure the system remains effective and user-friendly.
 
 ## Accountability Framework
 -------------------------
@@ -65,6 +61,8 @@ Our project is built around an accountability framework that ensures:
 -------------------
 
 - **Admin Portal**: Accessible for administrative tasks and oversight.
+- **Transaction Portal**: Accessible for users to file their taxes.
+- **Financial transaction Visualizer**: Accessible for users to keep a track of where the tax money is being disbursed.
 
 ## Installation and Running Instructions
 
@@ -104,12 +102,11 @@ Open a web browser and navigate to:
 http://127.0.0.1:6969
 ```
 
-## Contributing
-
-We welcome contributions to enhance the project's functionality and security. Please submit pull requests or issues through our repository.
+## Team Contribution
+Our team has worked collaboratively to design and implement this system, ensuring that it meets the highest standards of privacy, security, and transparency. We are committed to ongoing development and improvement to ensure the system remains effective and user-friendly.
 
 
 ## Acknowledgments
 
-Special thanks to our team members and contributors for their dedication and expertise in developing this project.
+Special thanks to our team members for their dedication and expertise in developing this project.
 ```
